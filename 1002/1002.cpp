@@ -16,8 +16,8 @@ int main() {
 		cin >> p.exp >> p.coe;
 		st1.push(p);
 	}
-	cin >> n2;
-	for (int i = 0; i < n2; i++) {
+	cin >> n1;
+	for (int i = 0; i < n1; i++) {
 		cin >> p.exp >> p.coe;
 		st2.push(p);
 	}
