@@ -1,87 +1,92 @@
-#include <cstdio>
-#include <algorithm>
-#include <vector>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define inf 0x3fffffff
+#define MAXN 510
 using namespace std;
-const int inf = 99999999;
-int cmax, n, sp, m;
-int minNeed = inf, minBack = inf;
-int e[510][510], dis[510], weight[510];
-bool visit[510];
-vector<int> pre[510];
+int map[MAXN][MAXN],dis[MAXN],numB[MAXN],maxB,numS,indexP,numR,minNeed=inf,minBack=inf;
+bool visit[MAXN];
+vector<int> pre[MAXN];
 vector<int> path, temppath;
-void dfs(int v) {
-    temppath.push_back(v);
-    if(v == 0) {
-        int need = 0, back = 0;
-        for(int i = temppath.size() - 1; i >= 0; i--) {
-            int id = temppath[i];
-            if(weight[id] > 0) {
-                back += weight[id];
-            } else {
-                if(back > (0 - weight[id])) {
-                    back += weight[id];
-                } else {
-                    need += ((0 - weight[id]) - back);
-                    back = 0;
-                }
-            }
-        }
-        if(need < minNeed) {
-            minNeed = need;
-            minBack = back;
-            path = temppath;
-        } else if(need == minNeed && back < minBack) {
-            minBack = back;
-            path = temppath;
-        }
-        temppath.pop_back();
-        return ;
-    }
-    for(int i = 0; i < pre[v].size(); i++)
-        dfs(pre[v][i]);
-    temppath.pop_back();
+void dij(){
+	for(int i = 0; i <= numS; i++){
+		int u=-1,min=inf;
+		for(int j = 0; j <= numS; j++){
+			if(visit[j]==false&&dis[j]<min){
+				u=j;
+				min=dis[j];
+			}
+		}
+		if(u==-1) break;
+		visit[u]=true;
+		for(int k=0;k <= numS; k++){
+			if(visit[k]==false && map[u][k] != inf){
+				if(dis[k] > dis[u]+map[u][k]){
+					pre[k].clear();
+					pre[k].push_back(u);
+					dis[k]=dis[u]+map[u][k];
+				}else if(dis[k] == dis[u]+map[u][k]){
+					pre[k].push_back(u); 
+				} 
+			}
+		}
+	}
 }
-int main() {
-    fill(e[0], e[0] + 510 * 510, inf);
-    fill(dis, dis + 510, inf);
-    scanf("%d%d%d%d", &cmax, &n, &sp, &m);
-    for(int i = 1; i <= n; i++) {
-        scanf("%d", &weight[i]);
-        weight[i] = weight[i] - cmax / 2;
-    }
-    for(int i = 0; i < m; i++) {
-        int a, b;
-        scanf("%d%d", &a, &b);
-        scanf("%d", &e[a][b]);
-        e[b][a] = e[a][b];
-    }
-    dis[0] = 0;
-    for(int i = 0; i <= n; i++) {
-        int u = -1, minn = inf;
-        for(int j = 0; j <= n; j++) {
-            if(visit[j] == false && dis[j] < minn) {
-                u = j;
-                minn = dis[j];
-            }
-        }
-        if(u == -1) break;
-        visit[u] = true;
-        for(int v = 0; v <= n; v++) {
-            if(visit[v] == false && e[u][v] != inf) {
-                if(dis[v] > dis[u] + e[u][v]) {
-                    dis[v] = dis[u] + e[u][v];
-                    pre[v].clear();
-                    pre[v].push_back(u);
-                }else if(dis[v] == dis[u] + e[u][v]) {
-                    pre[v].push_back(u);
-                }
-            }
-        }
-    }
-    dfs(sp);
-    printf("%d 0", minNeed);
-    for(int i = path.size() - 2; i >= 0; i--)
-        printf("->%d", path[i]);
-    printf(" %d", minBack);
-    return 0;
+void dfs(int index){
+	temppath.push_back(index);
+	if(index == 0){
+		int need = 0, back = 0, path_length = temppath.size();
+		for(int i= path_length-1; i>=0;i--){
+			int id = temppath[i];
+			if(numB[id] > 0){
+				back+=numB[id];
+			}else{
+				if(back>abs(numB[id])){
+					back+=numB[id];
+				}else{
+					need = abs(back + numB[id]) ;
+					back=0;
+				}
+			}
+		}
+		if(need<minNeed){
+			path=temppath;
+			minNeed = need;
+			minBack = back;
+		}else if(minNeed == need && back<minBack){
+			minBack=back;
+			path=temppath;
+		}
+		temppath.pop_back();
+		return;
+	}
+	int length = pre[index].size();
+	for(int i=0;i<length;i++){
+		dfs(pre[index][i]);
+	}
+	temppath.pop_back(); 
+}
+int main(){
+	fill(map[0],map[0]+MAXN*MAXN,inf);
+	fill(dis,dis+MAXN,inf);
+	fill(visit,visit+MAXN,false);
+	cin>>maxB>>numS>>indexP>>numR;
+	for(int i=1;i<=numS;i++){
+		cin>>numB[i];
+		numB[i] = numB[i]- maxB/2;
+	}
+	for(int i=0; i<numR; i++){
+		int c1,c2,road;
+		cin>>c1>>c2>>road;
+		map[c1][c2]=map[c2][c1]=road; 
+	}
+	dis[0]=0;
+	dij();
+	dfs(indexP);
+	printf("%d 0",minNeed);
+	int i = path.size()-2;
+	for(;i>=0;i--){
+		printf("->%d",path[i]);
+	}
+	printf(" %d",minBack);
 }
