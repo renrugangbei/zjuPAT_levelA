@@ -1,28 +1,24 @@
 #include<iostream>
-#include<iomanip>
-#include<vector>
+#include<cstdio>
 using namespace std;
-int main() {
-	double w, t, l;
-	double res = 1.0;
-	vector<char> s;
-	for (int i = 0; i < 3; i++) {
-		cin >> w >> t >> l;
-		if (w > t&&w > l) {
-			s.push_back('W');
-			res *= w;
+int main(){
+	char bet[3] = {'W','T','L'};
+	char bestbet[3];
+	double radio = 1;
+	for(int i = 0; i < 3; i++){
+		double maxbet = 0;
+		for(int j = 0;j < 3; j++){
+			double temp;
+			cin>>temp;
+			if(temp > maxbet){
+				bestbet[i] = bet[j];
+				maxbet = temp;
+			}
 		}
-		if (t > w&&t > l) {
-			s.push_back('T');
-			res *= t;
-		}
-		if (l > w&&l > t) {
-			s.push_back('L');
-			res *= l;
-		}
+		radio *= maxbet;
 	}
-	for (auto s1 : s) {
-		cout << s1 << " ";
+	for(int i = 0; i < 3; i++){
+		cout<<bestbet[i]<<" ";
 	}
-	cout << fixed << setprecision(2) << (res*0.65 - 1) * 2;
+	printf("%.2f",(radio*0.65-1)*2.0);
 }
