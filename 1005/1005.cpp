@@ -1,42 +1,21 @@
-#include<iostream>
+#include<cstdio>
 #include<string>
+#include<iostream>
+#include<algorithm>
 using namespace std;
-void Output(int num) {
-	switch (num) {
-	case 0:cout << "zero"; break;
-	case 1:cout << "one"; break;
-	case 2:cout << "two"; break;
-	case 3:cout << "three"; break;
-	case 4:cout << "four"; break;
-	case 5:cout << "five"; break;
-	case 6:cout << "six"; break;
-	case 7:cout << "seven"; break;
-	case 8:cout << "eight"; break;
-	case 9:cout << "nine"; break;
+int main(){
+	string mp[10] = {"zero","one","two","three","four","five","six","seven","eight","nine"};
+	string num;
+	cin>>num;
+	int out = 0;
+	int len = num.length();
+	for(int i = 0; i < len; i++){
+		out = out + num[i]-'0';
 	}
-}
-int main() {
-	string a;
-	int num = 0;
-	cin >> a;
-	int i = 0;
-	while (i<a.length()) {
-		num += a[i] - 48;
-		i++;
-	}
-	if (num >= 100) {
-		Output(num / 100);
-		cout << " ";
-		Output(num / 10 % 10);
-		cout << " ";
-		Output(num % 10);
-	} else if (num < 100 & num >= 10) {
-		Output(num / 10);
-		cout << " ";
-		Output(num % 10);
-	}
-	else {
-		Output(num);
-	}
-	return 0;
+	num = to_string(out);
+	len = num.length();
+	cout<<mp[(num[0]-'0')];
+	for(int i = 1; i < len; i++){
+		cout<<" "<<mp[(num[i]-'0')];
+	} 
 }
