@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include <vector>
+
 using namespace std;
 struct node {
     int num, de, cai;
