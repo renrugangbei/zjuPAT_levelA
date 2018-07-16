@@ -1,42 +1,67 @@
-#include <iostream>
-#include <algorithm>
-
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cstdio>
+//ccout cin �ᳬʱ 
 using namespace std;
-struct node {
-    int num, de, cai;
+struct student{
+	int id,virtue,talent;
 };
-int cmp(struct node a, struct node b) {
-    if ((a.de + a.cai) != (b.de + b.cai))
-        return (a.de + a.cai) > (b.de + b.cai);
-    else if (a.de != b.de)
-        return a.de > b.de;
-    else
-        return a.num < b.num;
+bool scmp(student s1, student s2){
+	if((s1.virtue + s1.talent) == (s2.virtue + s2.talent)){
+		if(s1.virtue == s2.virtue){
+			return s1.id < s2.id;
+		}else{
+			return s1.virtue > s2 .virtue; 
+		}
+	}
+	return (s1.virtue +s1.talent) > (s2.virtue + s2.talent);
 }
-int main() {
-    int n, low, high;
-    scanf("%d %d %d", &n, &low, &high);
-    vector<node> v[4];
-    node temp;
-    int total = n;
-    for (int i = 0; i < n; i++) {
-        scanf("%d %d %d", &temp.num, &temp.de, &temp.cai);
-        if (temp.de < low || temp.cai < low)
-            total--;
-        else if (temp.de >= high && temp.cai >= high)
-            v[0].push_back(temp);
-        else if (temp.de >= high && temp.cai < high)
-            v[1].push_back(temp);
-        else if (temp.de < high && temp.cai < high && temp.de >= temp.cai)
-            v[2].push_back(temp);
-        else
-            v[3].push_back(temp);
-    }
-    printf("%d\n", total);
-    for (int i = 0; i < 4; i++) {
-        sort(v[i].begin(), v[i].end(), cmp);
-        for (int j = 0; j < v[i].size(); j++)
-            printf("%d %d %d\n", v[i][j].num, v[i][j].de, v[i][j].cai);
-    }
-    return 0;
-}
+int main(){
+	int num,low,high;
+	cin>>num>>low>>high;
+	vector<student> sage,nobel,fool,rest;
+	int cnt = num;
+	for(int i = 0; i < num; i++){
+		student temp;
+		scanf("%d %d %d",&temp.id,&temp.virtue,&temp.talent);
+		if(temp.virtue >= low && temp.talent >= low){
+			if(temp.virtue >= high && temp.talent >= high){
+				sage.push_back(temp);
+			}else if(temp.virtue >= high){
+				nobel.push_back(temp);
+			}else if(temp.virtue >= temp.talent){
+				fool.push_back(temp);
+			}else{
+				rest.push_back(temp);
+			}
+		}else{
+			cnt--;
+		}
+	}
+	sort(sage.begin(),sage.end(),scmp);
+	sort(nobel.begin(),nobel.end(),scmp);
+	sort(fool.begin(),fool.end(),scmp);
+	sort(rest.begin(),rest.end(),scmp);
+	cout<<cnt<<endl;
+	if(!sage.empty()){
+		for(auto s:sage){
+			printf("%d %d %d\n",s.id,s.virtue,s.talent);
+		}
+	}
+	if(!nobel.empty()){
+		for(auto s:nobel){
+			printf("%d %d %d\n",s.id,s.virtue,s.talent);
+		}
+	}	
+	if(!fool.empty()){
+		for(auto s:fool){
+			printf("%d %d %d\n",s.id,s.virtue,s.talent);
+		}
+	}
+	if(!rest.empty()){
+		for(auto s:rest){
+			printf("%d %d %d\n",s.id,s.virtue,s.talent);
+		}
+	}
+} 
