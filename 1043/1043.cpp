@@ -1,45 +1,41 @@
-#include<iostream>
-#include<queue>
 #include<vector>
-#include<algorithm>
+#include<cstdio>
 using namespace std;
 vector<int> pre,post;
-bool isMirror = false;
-void getPost(int root, int tail){
-	//ÏÈÐò±äºóÐò 
-	if(root > tail) return;
-	int i = root + 1, j= tail;
-	if(!isMirror){
-		while(pre[root] > pre[i] && i<=tail) i++;
-		while(pre[root] <= pre[j] && j > root) j--;
+bool ismirror = false;
+void getpost(int root, int tail){
+	int i = root + 1, j = tail;
+	if(!ismirror){
+		while(i <= tail && pre[i] < pre[root]) i++;
+		while(j > root && pre[j] >= pre[root]) j--;	
 	}else{
-		while(i <= tail && pre[root] <= pre[i]) i++;
-		while(j > root && pre[root] > pre[j]) j--;
+		while(i <= tail && pre[i] >= pre[root]) i++;
+		while(j > root && pre[j] < pre[root]) j--;
 	}
-	if(i-j!=1)return;
-	getPost(root+1,j);
-	getPost(i,tail);
+	if(i - j != 1) return;
+	getpost(root + 1, j);
+	getpost(i, tail);
 	post.push_back(pre[root]);
 }
 int main(){
 	int num;
-	cin>>num;
+	scanf("%d",&num);
 	pre.resize(num);
-	for(int i=0;i<num;i++){
-		cin>>pre[i];
+	for(int i = 0; i < num; i++){
+		scanf("%d",&pre[i]);
 	}
-	getPost(0,num-1);
-	if(post.size()!=num){
-		isMirror = true;
-		getPost(0,num-1);
+	getpost(0 , num-1);
+	if(post.size() != num){
+		post.clear();
+		ismirror = true;
+		getpost(0,num-1);
 	}
-	if(post.size()==num){
-		printf("YES\n");
-		cout<<post[0];
-		for(int i=1;i<post.size();i++){
-			cout<<" "<<post[i];
+	if(post.size() == num){
+		printf("Yes\n%d",post[0]);
+		for(int i = 1; i< num; i++){
+			printf(" %d",post[i]);
 		}
 	}else{
-		cout<<"NO"<<endl;
+		printf("No");
 	}
 } 
