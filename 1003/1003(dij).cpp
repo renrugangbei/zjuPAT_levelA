@@ -49,7 +49,7 @@ int main(){
 	for(int i = 0; i< n; i++){
 		scanf("%d",&weight[i]);
 	}
-	for(int i = 0; i < roadsum;i++){
+	for(int i = 0; i < roadnum;i++){
 		int c1,c2,cost;
 		scanf("%d %d %d",&c1,&c2,&cost);
 		e[c1][c2] = e[c2][c1] = cost;
