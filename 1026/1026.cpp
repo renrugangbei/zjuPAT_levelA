@@ -99,9 +99,11 @@ int main(){
 	}
 	sort(ans.begin(),ans.end(),cmp2);
 	for(int i = 0; i < ans.size(); i++){
-		printf("%02d:%02d:%02d %02d:%02d:%02d %.0f\n",ans[i].arriveTime/3600,ans[i].arriveTime%3600/60,ans[i].arriveTime%60,
+		if(player[i].startTime < 21 * 3600){
+				printf("%02d:%02d:%02d %02d:%02d:%02d %.0f\n",ans[i].arriveTime/3600,ans[i].arriveTime%3600/60,ans[i].arriveTime%60,
 											ans[i].startTime/3600,ans[i].startTime%3600/60,ans[i].startTime%60,
 											round((ans[i].startTime - ans[i].arriveTime)/60.0));
+		}
 	}
 	printf("%d",table[1].serveCnt);
 	for(int i = 2; i<= tnum; i++){
