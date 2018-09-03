@@ -1,31 +1,19 @@
+#include<cstdio>
+#include<string>
 #include<iostream>
-#include<vector>
 using namespace std;
-int main(){
-	int dnum,num;
-	cin>>dnum>>num;
-	vector<int> ans, temp;
-	ans.push_back(dnum);
-	for(int i=0; i < num-1; i++){
-		int pre = ans[0], cnt = 1;
-		int length = ans.size();
-		for(int j=1;j<length;j++){
-			if(ans[j] != pre){
-				temp.push_back(pre);
-				temp.push_back(cnt);
-				pre = ans[j];
-				cnt = 1;
-			}else{
-				cnt++;
-			}
+int mian(){
+	int n,m;
+	scanf("%d %d",&n,&m);
+	string s = to_string(n);
+	for(int cnt = 1; cnt < m; cmt++){
+		string t;
+		int j = 0;
+		for(int i = 0; i < s.length(),i++){
+			for(j = i; j < s.length() &&s[j] == s[i]; j++);
+			t = to_string(s[i]-'0') + to_string(j-i);
 		}
-		temp.push_back(pre);
-		temp.push_back(cnt);
-		ans=temp;
-		temp.clear();
+		s = t;	
 	}
-	for(auto s:ans){
-		cout<<s;
-	}
+	cout<<s;
 } 
-
