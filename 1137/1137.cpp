@@ -1,65 +1,61 @@
 #include<iostream>
+#include<algorithm>
 #include<map>
 #include<vector>
-#include<algorithm>
-//因为要按序输出，所以不能用map map不能用sort函数 
+#include<string> 
 using namespace std;
 struct student{
 	string name;
-	int ps=-1,ms=-1,fs=-1,score=-1;
+	int Gp = -1,Gm = -1,Gf = -1,G = -1;
 }; 
-bool cmp(student a,student b){
-	return a.score!=b.score?a.score>b.score:a.name<b.name;
+bool cmp(student a, student b){
+	if(a.G != b.G){
+		return a.G > b.G;
+	}else{
+		return a.name < b.name;
+	}
 }
 int main(){
-	string names;
-	int pn,mn,fn,cnt=0;
-	vector<student> v, ans;
-	map<string,int> index;
-	cin>>pn>>mn>>fn;
-	for(int i=0;i<pn;i++){
-		string tn;
-		int ts;
-		cin>>tn>>ts;
-		if(ts >= 200){
-			student temp;
-			temp.name=tn;
-			temp.ps=ts;
-			v.push_back(temp);
-			index[tn]=cnt++;
+	int p, m, n;
+	scanf("%d %d %d",&p,&m,&n);
+	map<string,int> hash;
+	vector<student> s;
+	int index = 1;
+	for(int i = 0; i < p; i++){
+		student temp;
+		cin>>temp.name>>temp.Gp;
+		if(temp.Gp >= 200){
+			hash[temp.name]= index++;
+			s.push_back(temp);
 		}
 	}
-	for(int i=0;i<mn;i++){
-		string tn;
-		int ts;
-		cin>>tn>>ts;
-		auto inx=index.find(tn);
-		if(inx!=index.end()){
-			v[inx->second].ms=ts;
+	for(int i = 0; i < m; i++){
+		student temp;
+		cin>>temp.name>>temp.Gm;
+		if(hash.count(temp.name)){
+			s[hash[temp.name] - 1].Gm = temp.Gm;
 		}
 	}
-	for(int i=0;i<fn;i++){
-		string tn;
-		int ts;
-		cin>>tn>>ts;
-		auto inx=index.find(tn);
-		if(inx!=index.end()){
-			v[inx->second].fs=ts;
-			if(v[inx->second].ms>ts&&ts!=-1){
-				v[inx->second].score=int(v[inx->second].ms*0.4+ts*0.6+0.5);//注意四舍五入处理 
-			}else{
-				v[inx->second].score=ts;
+	for(int i = 0; i < n; i++){
+		student temp;
+		int cnt = 0;
+		cin>>temp.name>>temp.Gf;
+		if(hash.count(temp.name)){
+			if(temp.Gf >= 60){
+				if(temp.Gf < s[hash[temp.name] - 1].Gm){
+					s[hash[temp.name] - 1].G = int(temp.Gf*0.6 + s[hash[temp.name] - 1].Gm*0.4 + 0.5);
+					s[hash[temp.name] - 1].Gf = temp.Gf;
+				}else{
+					s[hash[temp.name] - 1].G = s[hash[temp.name] - 1].Gf = temp.Gf;
+				}
 			}
 		}
-		
 	}
-	for(auto s:v){
-		if(s.score>=60){
-			ans.push_back(s);
+	sort(s.begin(),s.end(),cmp);
+	int len = s.size();
+	for(int i = 0; i < len; i++){
+		if(s[i].Gf >= 60){
+			cout<<s[i].name<<" "<<s[i].Gp<<" "<<s[i].Gm<<" "<<s[i].Gf<<" "<<s[i].G<<endl;
 		}
-	}
-	sort(ans.begin(),ans.end(),cmp);
-	for(auto s:ans){
-		cout<<s.name<<" "<<s.ps<<" "<<s.ms<<" "<<s.fs<<" "<<s.score<<endl;
 	}
 }
