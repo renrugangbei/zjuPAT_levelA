@@ -1,19 +1,19 @@
-#include<iostream>
+#include<cstdio>
 using namespace std;
-int main() {
-	int n, num = 0, cnt = 0;;
-	cin >> n;
-	for (int i = 0; i < n; i++) {
-		int temp;
-		cin >> temp;
-		if (temp > num) {
-			cnt += (temp - num) * 6 + 5;
-		} else if(temp<num){
-			cnt += (num - temp) * 4 + 5;
-		} else {
-			cnt += 5;
+int main(){
+	int n;
+	scanf("%d",&n);
+	int ans = 0,nowlevel = 0;
+	for(int i = 0; i < n; i++){
+		int templevel;
+		scanf("%d",&templevel);
+		if(templevel > nowlevel){
+			ans += (templevel - nowlevel) * 6;
+		}else{
+			ans += (nowlevel - templevel) * 4;
 		}
-		num = temp;
+		ans += 5;
+		nowlevel = templevel;
 	}
-	cout << cnt;
-}//这电梯竟然能一直按一层。。。。
+	printf("%d",ans);
+} 
