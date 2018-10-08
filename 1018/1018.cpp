@@ -1,92 +1,94 @@
-#include<iostream>
 #include<vector>
+#include<cstdio>
+#include<iostream>
 #include<algorithm>
-#define inf 0x3fffffff
 #define MAXN 510
+#define INF 0x3fffffff
 using namespace std;
-int map[MAXN][MAXN],dis[MAXN],numB[MAXN],maxB,numS,indexP,numR,minNeed=inf,minBack=inf;
+int e[MAXN][MAXN], dis[MAXN], bike[MAXN], minSend = INF, minBack = INF; 
 bool visit[MAXN];
-vector<int> pre[MAXN];
-vector<int> path, temppath;
+vector<int> pre[MAXN],temppath,path;
 void dij(){
-	for(int i = 0; i <= numS; i++){
-		int u=-1,min=inf;
-		for(int j = 0; j <= numS; j++){
-			if(visit[j]==false&&dis[j]<min){
-				u=j;
-				min=dis[j];
+	dis[0] = 0;
+	for(int i = 0; i < MAXN; i++){
+		int u = -1, min = INF;
+		for(int j = 0; j < MAXN; j++){
+			if(visit[j] == false && dis[j] < min){
+				min = dis[j];
+				u = j;
 			}
 		}
-		if(u==-1) break;
-		visit[u]=true;
-		for(int k=0;k <= numS; k++){
-			if(visit[k]==false && map[u][k] != inf){
-				if(dis[k] > dis[u]+map[u][k]){
-					pre[k].clear();
-					pre[k].push_back(u);
-					dis[k]=dis[u]+map[u][k];
-				}else if(dis[k] == dis[u]+map[u][k]){
-					pre[k].push_back(u); 
-				} 
+		if(u == -1)return;
+		visit[u] = true;
+		for(int j = 0; j < MAXN; j++){
+			if(visit[j] == false && e[u][j] != INF){
+				if(dis[j] > e[u][j] + dis[u]){
+					pre[j].clear();
+					pre[j].push_back(u);
+					dis[j] = e[u][j]+dis[u];
+				}else if(dis[j] == dis[u] + e[u][j]){
+					pre[j].push_back(u);
+				}
 			}
 		}
 	}
 }
-void dfs(int index){
-	temppath.push_back(index);
-	if(index == 0){
-		int need = 0, back = 0, path_length = temppath.size();
-		for(int i= path_length-1; i>=0;i--){
-			int id = temppath[i];
-			if(numB[id] > 0){
-				back+=numB[id];
+void dfs(int st){
+	temppath.push_back(st);
+	if(st == 0){
+		int send = 0, back = 0;
+		int len = temppath.size();
+		for(int i = len - 2; i >= 0; i--){
+			int index = temppath[i];
+			if(bike[index] > 0){
+				back += bike[index];
+			}else if((back + bike[index])> 0){
+				back+=bike[index];
 			}else{
-				if(back>abs(numB[id])){
-					back+=numB[id];
-				}else{
-					need = abs(back + numB[id]) ;
-					back=0;
-				}
+				send += -(back + bike[index]);
+				back = 0;
 			}
 		}
-		if(need<minNeed){
-			path=temppath;
-			minNeed = need;
+		if(send < minSend){
+			path = temppath;
+			minSend = send;
 			minBack = back;
-		}else if(minNeed == need && back<minBack){
-			minBack=back;
-			path=temppath;
+		}else if(send == minSend && back < minBack){
+			path = temppath;
+			minSend = send;
+			minBack = back;
 		}
 		temppath.pop_back();
 		return;
 	}
-	int length = pre[index].size();
-	for(int i=0;i<length;i++){
-		dfs(pre[index][i]);
+	int size = pre[st].size();
+	for(int i =0; i < size; i++){
+		dfs(pre[st][i]);
 	}
-	temppath.pop_back(); 
+	temppath.pop_back();
 }
 int main(){
-	fill(map[0],map[0]+MAXN*MAXN,inf);
-	fill(dis,dis+MAXN,inf);
+	int cmax,snum,rnum,sp;
+	fill(e[0],e[0]+MAXN*MAXN,INF);
+	fill(dis,dis+MAXN,INF);
 	fill(visit,visit+MAXN,false);
-	cin>>maxB>>numS>>indexP>>numR;
-	for(int i=1;i<=numS;i++){
-		cin>>numB[i];
-		numB[i] = numB[i]- maxB/2;
+	scanf("%d %d %d %d",&cmax,&snum,&sp,&rnum);
+	for(int i = 1; i <= snum; i++){
+		int temp;
+		scanf("%d",&temp);
+		bike[i] = temp - cmax/2;
 	}
-	for(int i=0; i<numR; i++){
-		int c1,c2,road;
-		cin>>c1>>c2>>road;
-		map[c1][c2]=map[c2][c1]=road; 
+	for(int i = 0; i < rnum; i++){
+		int t1, t2,t;
+		scanf("%d %d %d",&t1,&t2,&t);
+		e[t1][t2] = e[t2][t1] = t;
 	}
-	dis[0]=0;
 	dij();
-	dfs(indexP);
-	printf("%d 0",minNeed);
-	int i = path.size()-2;
-	for(;i>=0;i--){
+	dfs(sp);
+	printf("%d 0",minSend);
+	int len = path.size();
+	for(int i = len - 2; i >= 0; i--){
 		printf("->%d",path[i]);
 	}
 	printf(" %d",minBack);
-}
+} 
